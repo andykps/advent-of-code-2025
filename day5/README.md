@@ -1,0 +1,1 @@
+It's bash today. I've made things more difficult for myself by having the arbritary restriction of no external commands. This means that in part 2 when I want to sort the lines I've implemented a (probably highly inefficient) sort by looping the lines each time until I find the insertion position.  
