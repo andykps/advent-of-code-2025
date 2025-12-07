@@ -1,33 +1,24 @@
-import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-
-public class Laboratories {
-    public static void main(String[] args) throws IOException {
-        String filename = args[0];
-        Path path = FileSystems.getDefault().getPath(filename);
-        List<String> input = Files.readAllLines(path);
-        Grid grid = new Grid(input);
-        grid.simulate();
-        System.out.println("Part1: " + grid.getSplits());
-        System.out.println("Part2: " + grid.getRouteCount());
-//        System.out.println(grid);
-    }
+void main(String[] args) throws IOException {
+    String filename = args[0];
+    Path path = FileSystems.getDefault().getPath(filename);
+    List<String> input = Files.readAllLines(path);
+    Grid grid = new Grid(input);
+    grid.simulate();
+    IO.println("Part1: " + grid.getSplits());
+    IO.println("Part2: " + grid.getRouteCount());
+//        IO.println(grid);
 }
 
 public class Grid {
     private final char[][] cells;
     private final long[][] routes;
     private int splits = 0;
+
     public Grid(List<String> rows) {
         this.cells = rows.stream().map(String::toCharArray).toArray(char[][]::new);
         this.routes = new long[cells.length][cells[0].length];
     }
-    public char get(int x, int y) {
-        return cells[y][x];
-    }
+
     public void simulate() {
         for (int row = 0; row < cells.length-1; row++) {
             for (int col = 0; col < cells[0].length; col++) {
@@ -50,6 +41,8 @@ public class Grid {
             }
         }
     }
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (char[] row : cells) {
@@ -58,9 +51,11 @@ public class Grid {
         }
         return sb.toString();
     }
+
     public int getSplits() {
         return splits;
     }
+
     public long getRouteCount() {
         long total = 0;
         long[] lastRow = routes[routes.length - 1];
