@@ -11,15 +11,19 @@ public class Laboratories {
         List<String> input = Files.readAllLines(path);
         Grid grid = new Grid(input);
         grid.simulate();
-        System.out.println(grid.getSplits());
+        System.out.println("Part1: " + grid.getSplits());
+        System.out.println("Part2: " + grid.getRouteCount());
+//        System.out.println(grid);
     }
 }
 
 public class Grid {
     private final char[][] cells;
+    private final long[][] routes;
     private int splits = 0;
     public Grid(List<String> rows) {
         this.cells = rows.stream().map(String::toCharArray).toArray(char[][]::new);
+        this.routes = new long[cells.length][cells[0].length];
     }
     public char get(int x, int y) {
         return cells[y][x];
@@ -29,14 +33,18 @@ public class Grid {
             for (int col = 0; col < cells[0].length; col++) {
                 if (cells[row][col] == 'S') {
                     cells[row + 1][col] = '|';
+                    routes[row + 1][col] = 1;
                 }
                 if (cells[row][col] == '|') {
                     if (cells[row + 1][col] == '^') {
                         cells[row + 1][col - 1] = '|';
                         cells[row + 1][col + 1] = '|';
+                        routes[row + 1][col - 1] += routes[row][col];
+                        routes[row + 1][col + 1] += routes[row][col];
                         splits++;
                     } else {
                         cells[row + 1][col] = '|';
+                        routes[row + 1][col] += routes[row][col];
                     }
                 }
             }
@@ -52,5 +60,13 @@ public class Grid {
     }
     public int getSplits() {
         return splits;
+    }
+    public long getRouteCount() {
+        long total = 0;
+        long[] lastRow = routes[routes.length - 1];
+        for (int i = 0; i < lastRow.length; i++) {
+            total += lastRow[i];
+        }
+        return total;
     }
 }
