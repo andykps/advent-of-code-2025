@@ -17,11 +17,9 @@ while (points.isNotEmpty()) {
     }
     points.removeAt(0)
 }
-println("Total distances: ${distances.size}")
 
-val circuits = mutableListOf<Circuit>()
-var connections = 0
 val sortedDistances = distances.entries.sortedBy { it.value }
+val circuits = mutableListOf<Circuit>()
 sortedDistances.take(1000).forEach { shortestDistance ->
     val matches = circuits.filter { circuit ->
         circuit.joins(shortestDistance.key)
@@ -31,22 +29,22 @@ sortedDistances.take(1000).forEach { shortestDistance ->
             1 -> {
                 matches[0].add(shortestDistance.key)
             }
+
             2 -> {
                 val merged = matches[0]
                 merged.add(matches[1])
                 circuits.remove(matches[1])
             }
+
             else -> {
                 throw IllegalStateException("More than two matches found!")
             }
         }
-        connections++
     } else {
         circuits.add(shortestDistance.key)
-        connections++
     }
 }
-println("Part 1: ${circuits.sortedByDescending{it.size}.take(3).fold(1) { acc, e -> acc * e.size }}")
+println(circuits.sortedByDescending { it.size }.take(3).fold(1) { acc, e -> acc * e.size })
 
 data class Point(val x: Int, val y: Int, val z: Int) {
     fun distanceTo(other: Point): Double {
@@ -61,7 +59,6 @@ data class Point(val x: Int, val y: Int, val z: Int) {
 }
 data class Circuit(var points: MutableSet<Point>) {
     constructor(first: Point, second: Point) : this(mutableSetOf(first, second))
-
     fun add(other: Circuit) {
         points.addAll(other.points)
     }
